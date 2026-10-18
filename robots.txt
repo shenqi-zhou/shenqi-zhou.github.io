@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shenqi-zhou.github.io/sitemap.xml
