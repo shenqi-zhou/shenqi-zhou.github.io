@@ -48,7 +48,6 @@
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<div class="edit-banner" role="note" hidden>Draft view. Items with a dashed outline are hidden on the live site until you remove “todo” from their class and delete their “hidden” attribute.</div>
 
 <header class="topbar">
   <div class="topbar-in">
@@ -57,7 +56,6 @@
       <a href="#paper">Research</a>
       <a href="#projects">Projects</a>
       <a href="#education">Education</a>
-      <a class="todo" href="#misc" hidden>Misc</a>
       <a href="files/Shenqi_Zhou_CV.pdf">CV</a>
     </nav>
     <button class="theme-toggle" type="button" aria-label="Dark theme" aria-pressed="false" hidden>
@@ -97,12 +95,9 @@
       <li><span class="rk">Bioer Scholarship, ZJU</span><span class="rs" aria-hidden="true"> · </span><span class="rd">2024–2025</span></li>
     </ul>
 
-    <!-- Scholar and GitHub: put the real URL in each href, then delete "todo" and the hidden attribute from the li. -->
     <ul class="contact" role="list" aria-label="Contact">
       <li><a href="mailto:shenqi_zhou@zju.edu.cn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="M3 6.5l9 6.5 9-6.5"/></svg><span>shenqi_zhou@zju.edu.cn</span></a></li>
       <li><a href="files/Shenqi_Zhou_CV.pdf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2.5H6.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8z"/><path d="M14 2.5V8h5.5M8.5 13h7M8.5 17h5"/></svg><span>CV (PDF)</span></a></li>
-      <li class="todo" hidden><a href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5z"/><path d="M6 10.6V16c0 1.66 2.69 3 6 3s6-1.34 6-3v-5.4"/></svg><span>[Google Scholar]</span></a></li>
-      <li class="todo" hidden><a href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg><span>[GitHub]</span></a></li>
     </ul>
   </section>
 
@@ -110,7 +105,6 @@
     <div class="bio">
       <p>Hi, I’m Shenqi. I’m a final-year undergraduate in Biomedical Engineering at Zhejiang University. Since May&nbsp;2026, I’ve also been a research intern at the National University of Singapore, working with <a href="https://www.asintelligence.xyz/">Prof.&nbsp;Dianbo&nbsp;Liu</a>. I’m interested in AI for healthcare and in how we evaluate LLMs and AI&nbsp;agents.</p>
       <p>My current project, <a class="nw" href="#paper">Auto-MD-bench</a>, is a benchmark for AI agents that build medical prediction models on their own. These agents are usually guided by a single score, such as AUROC. The benchmark also checks whether the models give <span class="nw">well-calibrated</span> risk estimates, and whether they hold up on patients from other cohorts, hospitals or time periods. Before that, I worked with <a href="https://person.zju.edu.cn/en/dingnai">Prof.&nbsp;Nai&nbsp;Ding</a> at Zhejiang University, comparing how people and LLMs understand Chinese&nbsp;sentences.</p>
-      <p class="todo" hidden>[Optional: one plain sentence about your life outside research, for example where you grew up or what you do on weekends.]</p>
     </div>
 
     <section class="sec" id="news">
@@ -188,27 +182,6 @@
         <p class="text courses">Selected courses: Probability and Mathematical Statistics, Linear Algebra, Introduction to Pattern Analysis and Machine Learning, Data Structures and Algorithm Analysis, Advanced Programming, Biomedical Signal&nbsp;Processing</p>
         <p class="text courses">Programming: Python, C; experienced with AI coding agents (Codex, Claude&nbsp;Code)</p>
       </article>
-    </section>
-
-    <!-- Misc: when you fill in an item, delete "todo" and "hidden" from it AND from this section and the Misc link in the top bar. -->
-    <section class="sec todo" id="misc" hidden>
-      <h2>Misc</h2>
-      <div class="entry todo" hidden>
-        <h3>Reading</h3>
-        <p class="text">[Two or three books you read recently, with a sentence on what stayed with you from each.]</p>
-      </div>
-      <div class="entry todo" hidden>
-        <h3>Outside the lab</h3>
-        <p class="text">[What you do when you are not doing research, in two or three plain sentences.]</p>
-      </div>
-      <div class="entry todo" hidden>
-        <h3>Places</h3>
-        <p class="text">[Places you have lived in or travelled to, with one detail you remember from each.]</p>
-      </div>
-      <div class="entry todo" hidden>
-        <h3>Favorites</h3>
-        <p class="text">[A few favorites, such as a film, an album or a place to eat, in one or two sentences.]</p>
-      </div>
     </section>
   </div>
 </main>
