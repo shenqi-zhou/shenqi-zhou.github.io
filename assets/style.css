@@ -1,0 +1,605 @@
+/* Shenqi Zhou — warm paper, gold accent, a profile column on the left and one reading column on the right. */
+
+/* Fallback faces tuned to the metrics of DM Sans / DM Serif Display, so the page
+   keeps its shape where Google Fonts is slow or blocked. */
+@font-face {
+  font-family: "DM Sans Fallback";
+  src: local("Arial"), local("Helvetica Neue"), local("Helvetica");
+  size-adjust: 98%;
+  ascent-override: 98%;
+  descent-override: 30%;
+}
+@font-face {
+  font-family: "DM Serif Fallback";
+  src: local("Georgia"), local("Times New Roman");
+  size-adjust: 102%;
+}
+
+:root {
+  --bg: #f0ede6;
+  --text: #222222;
+  --text-2: #48443d;
+  --muted: #6b665d;          /* dates, meta lines (4.9:1 on the paper) */
+  --nav: #6b665d;            /* top-bar links at rest (4.9:1, about the lightness of qiao's #666) */
+  --gold: #b89a60;           /* timeline dots, active nav, callout border */
+  --link-line: #9c7f45;      /* a deeper gold for link underlines, so they read at 3:1 on the paper */
+  --hover: #76592a;          /* link text on hover (5.6:1) */
+  --callout-bg: #e9e0cc;
+  --rule: #dcd7cc;
+  --thread: #cfc7b7;         /* the timeline line, a step darker than the hairlines */
+  --plate-line: #ddd8cd;
+  --photo-line: rgb(0 0 0 / .14);
+  --hover-bg: rgb(0 0 0 / .05);
+  --todo: #a5560a;
+  --banner-bg: #f3e3bd;
+  --banner-text: #4d3800;
+
+  --sidebar: 200px;
+  --gutter: 60px;
+  --sans: "DM Sans", "DM Sans Fallback", "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --serif: "DM Serif Display", "DM Serif Fallback", Georgia, "Times New Roman", serif;
+  --zh: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1c1a17;
+    --text: #e7e2d8;
+    --text-2: #c4bdb1;
+    --muted: #a29b8f;
+    --nav: #958f84;
+    --gold: #a8905f;
+    --link-line: rgb(168 144 95 / .8);
+    --hover: #dcc290;
+    --callout-bg: #2b261d;
+    --rule: #34302a;
+    --thread: #48423a;
+    --plate-line: #34302a;
+    --photo-line: rgb(255 255 255 / .08);
+    --hover-bg: rgb(255 255 255 / .07);
+    --todo: #e0a15e;
+    --banner-bg: #3a2f12;
+    --banner-text: #f3e1a8;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1c1a17;
+  --text: #e7e2d8;
+  --text-2: #c4bdb1;
+  --muted: #a29b8f;
+  --nav: #958f84;
+  --gold: #a8905f;
+  --link-line: rgb(168 144 95 / .8);
+  --hover: #dcc290;
+  --callout-bg: #2b261d;
+  --rule: #34302a;
+  --thread: #48423a;
+  --plate-line: #34302a;
+  --photo-line: rgb(255 255 255 / .08);
+  --hover-bg: rgb(255 255 255 / .07);
+  --todo: #e0a15e;
+  --banner-bg: #3a2f12;
+  --banner-text: #f3e1a8;
+  color-scheme: dark;
+}
+:root[data-theme="light"] { color-scheme: light; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-kerning: normal;
+}
+
+h1, h2, h3, p, ul, ol, figure { margin: 0; padding: 0; }
+h1, h2, h3 { font-weight: 400; }
+ul, ol { list-style: none; }
+img { max-width: 100%; }
+strong { font-weight: 600; }
+.nw { white-space: nowrap; }
+
+/* Links keep the text colour; the gold sits underneath */
+a {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--link-line);
+  text-underline-offset: 3px;
+  transition: color .15s ease, text-decoration-color .15s ease;
+}
+a:hover { color: var(--hover); text-decoration-color: currentColor; }
+.meta a { color: inherit; }               /* adviser links stay in the muted meta colour; the gold line still marks them */
+.meta a:hover { color: var(--hover); }
+:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+[hidden] { display: none !important; }   /* draft items stay hidden whatever display a later rule sets */
+
+.skip-link { position: absolute; left: 16px; top: -64px; padding: 6px 12px; background: var(--bg); color: var(--text); z-index: 200; }
+.skip-link:focus { top: 8px; }
+#main:focus { outline: none; }
+#main { scroll-margin-top: 80px; }      /* the skip link moves focus without sliding the name under the bar */
+
+/* ─── Top bar ───────────────────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+}
+.topbar-in {
+  display: grid;
+  grid-template-columns: calc(var(--sidebar) + var(--gutter)) 1fr auto;
+  align-items: center;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 19px 40px 18px;
+}
+.site-name {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--text);
+  text-decoration: none;
+  justify-self: start;
+}
+.site-name:hover { color: var(--text); }
+/* With JS, the small name only appears once the large one has scrolled away */
+.watch-name .site-name { opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s; }
+.watch-name .topbar.scrolled .site-name { opacity: 1; visibility: visible; }
+
+.nav { display: flex; align-items: baseline; gap: 42px; }
+.nav a {
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.6;
+  letter-spacing: .005em;
+  color: var(--nav);
+  text-decoration: none;
+  padding-bottom: 3px;
+  background: linear-gradient(var(--gold), var(--gold)) no-repeat 0 100% / 0 2px;
+  transition: color .15s ease, background-size .25s ease;
+}
+.nav a:hover,
+.nav a.is-active { color: var(--text); background-size: 100% 2px; }
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: 0;
+  padding: 6px;
+  margin-right: -6px;
+  border-radius: 6px;
+  color: var(--nav);
+  cursor: pointer;
+  line-height: 0;
+  transition: background .15s, color .15s;
+}
+.theme-toggle:hover { background: var(--hover-bg); color: var(--text); }
+.theme-toggle svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.i-sun { display: none; }
+:root[data-theme="dark"] .i-sun { display: block; }
+:root[data-theme="dark"] .i-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .i-sun { display: block; }
+  :root:not([data-theme="light"]) .i-moon { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .watch-name .site-name, .nav a { transition: none; }
+}
+
+/* ─── Page grid: profile column left, name and reading column right ─── */
+.page {
+  display: grid;
+  grid-template-columns: var(--sidebar) minmax(0, 1fr);
+  grid-template-areas:
+    "side hero"
+    "side content";
+  grid-template-rows: auto 1fr;
+  column-gap: var(--gutter);
+  align-items: start;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 58px 40px 0;
+}
+.hero { grid-area: hero; scroll-margin-top: 200px; }
+.side { grid-area: side; position: relative; }
+.content { grid-area: content; min-width: 0; padding-bottom: 96px; }   /* inside the grid, so the sticky column has room at the end */
+/* The profile column stays in view. site.js sets --side-top so a column taller than the
+   window scrolls until its last line shows, then stops; without JS it only sticks on tall windows. */
+@media (min-width: 701px) and (min-height: 800px) {
+  html:not(.js) .side { position: sticky; top: 101px; }
+}
+@media (min-width: 701px) {
+  .js .side { position: sticky; top: var(--side-top, 101px); }
+}
+
+/* ─── Name block ────────────────────────────────────────── */
+.name {
+  font-family: var(--serif);
+  font-size: 2.75rem;
+  line-height: 1.08;
+  letter-spacing: -.012em;
+  color: var(--text);
+  margin-top: -6px;               /* cap height lines up with the top of the photo */
+}
+.name .zh {
+  font-family: var(--zh);
+  font-size: 1.15rem;
+  letter-spacing: .06em;
+  color: var(--muted);
+  margin-left: .35em;
+  vertical-align: .55em;
+}
+.affil { margin-top: 12px; font-size: 1rem; line-height: 1.55; color: var(--text-2); }
+.affil .sep { color: var(--muted); }
+
+/* The one highlighted line, set like a note in the margin of a notebook */
+.callout {
+  margin-top: 22px;
+  padding: 8px 12px;
+  background: var(--callout-bg);
+  border-left: 2.4px solid var(--gold);
+  border-radius: 0 4px 4px 0;
+  font-size: .95rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* ─── Sidebar ───────────────────────────────────────────── */
+/* Photo card. Front: photo; back: the illustrated avatar. */
+.flip-hint {
+  position: absolute;
+  top: -24px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: .75rem;
+  line-height: 1.5;
+  color: var(--muted);
+  pointer-events: none;
+  transition: opacity .25s ease;
+}
+html:not(.flip-ready) .flip-hint { display: none; }     /* shown once site.js has wired up the card */
+/* on wide screens the column stays in view, so the hint fades once the name has scrolled away */
+@media (min-width: 701px) { .topbar.scrolled ~ .page .flip-hint { opacity: 0; } }
+.hint-tap { display: none; }
+@media (hover: none) { .hint-click { display: none; } .hint-tap { display: inline; } }
+.flip {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  perspective: 900px;
+  border-radius: 4px;
+}
+html:not(.flip-ready) .flip { cursor: default; }
+.flip-in {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform .7s cubic-bezier(.3, .7, .2, 1);
+}
+.flip[aria-pressed="true"] .flip-in { transform: rotateY(180deg); }
+@media (hover: hover) {                /* a slight tilt hints that the card turns */
+  .flip-ready .flip:hover .flip-in { transform: rotateY(-6deg); }
+  .flip-ready .flip[aria-pressed="true"]:hover .flip-in { transform: rotateY(186deg); }
+}
+.face {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  background: #fff;
+}
+.face img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+.face::after {                      /* hairline drawn over the image so the white photo has an edge */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--photo-line);
+  pointer-events: none;
+}
+.back { transform: rotateY(180deg); }
+@media (prefers-reduced-motion: reduce) {   /* no tilt, and the two sides swap at once */
+  .flip-in { transition: none; }
+  .flip-ready .flip:hover .flip-in { transform: none; }
+  .flip-ready .flip[aria-pressed="true"] .flip-in,
+  .flip-ready .flip[aria-pressed="true"]:hover .flip-in { transform: rotateY(180deg); }
+}
+
+.timeline { margin-top: 20px; padding-left: 3px; }
+.timeline li {
+  position: relative;
+  padding: 0 0 10px 21px;
+  font-size: .8125rem;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+.timeline li::before {             /* the dot: a small gold bead with a paler ring */
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 2.5px var(--bg), 0 0 0 3.5px rgb(184 154 96 / .35);
+  z-index: 1;
+}
+.timeline li:not(:last-child)::after {   /* the thread */
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 9px;
+  bottom: -5px;
+  width: 1px;
+  background: var(--thread);
+}
+.timeline li:last-child { padding-bottom: 0; }
+.yr { font-weight: 500; color: var(--text); font-variant-numeric: tabular-nums; margin-right: .2em; }
+
+.records, .contact { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--rule); }
+
+/* Grades and scholarships: the item in ink, the detail in grey underneath */
+.records li { font-size: .8125rem; line-height: 1.45; color: var(--text); }
+.records li + li { margin-top: 9px; }
+.records .rk { font-weight: 500; }
+.records .rs { display: none; }
+.records .rd { display: block; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.contact { font-size: .8125rem; line-height: 1.5; }
+.contact li + li { margin-top: 7px; }
+.contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--text-2);
+  text-decoration: none;
+}
+.contact a span { text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px; transition: text-decoration-color .15s; }
+.contact a:hover { color: var(--hover); }
+.contact a:hover span { text-decoration-color: currentColor; }
+.contact svg { flex: 0 0 auto; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ─── Reading column ────────────────────────────────────── */
+.bio { margin-top: 26px; }
+.bio p { margin-bottom: 16px; }
+.bio p:last-child { margin-bottom: 0; }
+
+.sec { margin-top: 56px; }
+.sec > h2 {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: -.005em;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+section[id], .entry { scroll-margin-top: 96px; }
+
+.pub-title { font-size: 1.0625rem; font-weight: 500; line-height: 1.45; color: var(--text); text-wrap: balance; }
+.authors { margin-top: 5px; font-size: .875rem; line-height: 1.55; color: var(--muted); }
+.authors strong { color: var(--text); font-weight: 600; }
+.status { font-size: .875rem; line-height: 1.55; color: var(--muted); }
+.text { margin-top: 10px; }
+
+/* Figure 1 sits on a white plate with a hairline, never inverted */
+.fig { margin-top: 24px; }
+.plate {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--plate-line);
+  border-radius: 4px;
+  padding: 12px 14px;
+  transition: border-color .15s ease;   /* the plate links to the full-size figure; the gold edge marks it on hover */
+}
+.plate:hover { border-color: var(--gold); }
+.plate img { display: block; width: 100%; height: auto; }
+.fig figcaption {
+  margin-top: 10px;
+  font-size: .875rem;
+  font-style: normal;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.fig-n { color: var(--text); font-weight: 500; margin-right: .15em; }
+/* In the dark theme only the white figure plate is toned down; the photo is never filtered */
+:root[data-theme="dark"] .plate { filter: brightness(.9); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .plate { filter: brightness(.9); }
+}
+
+/* Entries: research, projects, education */
+.entry + .entry { margin-top: 32px; }
+.entry-head { display: flex; align-items: baseline; justify-content: space-between; gap: 2px 24px; }
+.entry h3 { font-size: 1.0625rem; font-weight: 500; line-height: 1.45; }
+.date {
+  flex: 0 0 auto;
+  font-size: .8125rem;
+  line-height: 1.5;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.meta { margin-top: 2px; font-size: .875rem; line-height: 1.55; color: var(--muted); }
+.entry .text + .text { margin-top: 10px; }
+/* Courses and Programming: detail lines, a step quieter than the prose and kept as a pair */
+.courses { font-size: .9375rem; line-height: 1.6; color: var(--text-2); }
+.entry .courses + .courses { margin-top: 6px; }
+
+/* Short lines only: on long paragraphs "pretty" makes the right edge more ragged, so they rely on the &nbsp; in the text */
+.news li > span, .fig figcaption { text-wrap: pretty; }
+.entry h3 { text-wrap: balance; }
+
+.news li {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 16px;
+  align-items: baseline;
+  font-size: .9375rem;
+  line-height: 1.55;
+}
+.news li + li { margin-top: 8px; }
+.news time { font-size: .8125rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ─── Footer ────────────────────────────────────────────── */
+.foot {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+.foot p {
+  border-top: 1px solid var(--rule);
+  padding: 20px 0 28px;
+  font-size: .8125rem;
+  line-height: 1.6;
+  color: var(--muted);
+  text-align: center;
+}
+.foot .sep { padding: 0 .1em; }
+
+/* ─── Draft view (?edit) ────────────────────────────────── */
+.edit-banner {
+  background: var(--banner-bg);
+  color: var(--banner-text);
+  font-size: .82rem;
+  line-height: 1.5;
+  padding: 8px 40px;
+  text-align: center;
+}
+.show-todo .todo { outline: 1px dashed var(--todo); outline-offset: 4px; }
+.show-todo .todo .todo { outline-offset: 2px; }
+
+/* ─── Medium screens ────────────────────────────────────── */
+@media (max-width: 900px) {
+  :root { --gutter: 44px; }
+  .topbar-in, .page { padding-left: 28px; padding-right: 28px; }
+  .foot { padding: 0 28px; }
+  .nav { gap: 26px; }
+  .name { font-size: 2.5rem; }
+}
+@media (max-width: 1000px) {              /* the two roles stack before the line would wrap around the dot */
+  .affil .sep { display: none; }
+  .affil > .nw { display: block; white-space: normal; }
+  .affil .nw .nw { white-space: nowrap; }
+}
+
+/* Narrow reading column: dates go under the titles */
+@media (max-width: 820px) {
+  .entry-head { flex-direction: column; gap: 0; }
+  .entry-head .date { order: 2; }
+}
+
+/* ─── Phones ────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .topbar { position: static; }
+  .topbar-in { grid-template-columns: 1fr auto; padding: 12px 18px; }
+  .site-name { display: none; }
+  .nav { gap: 22px; }
+  .nav a { font-size: .95rem; }
+
+  .page { display: block; padding: 30px 18px 56px; }
+  .content { padding-bottom: 0; }
+  .name { font-size: 2.2rem; margin-top: 0; }
+  .name .zh { font-size: 1.05rem; }
+  .affil { margin-top: 8px; font-size: .9375rem; }
+  .affil > .nw:last-child { margin-top: 4px; }   /* a small step between the two roles */
+  .callout { margin-top: 16px; }
+
+  .side {
+    margin-top: 46px;
+    display: grid;
+    grid-template-columns: 124px minmax(0, 1fr);
+    column-gap: 18px;
+    align-items: start;
+  }
+  .flip-hint { width: 124px; top: -24px; }
+  .flip { grid-column: 1; grid-row: 1; }
+  .timeline { grid-column: 2; grid-row: 1; margin-top: 2px; }
+  /* grades under the photo, scholarships under the timeline */
+  .records {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 124px minmax(0, 1fr);
+    gap: 9px 18px;
+    margin-top: 20px;
+    padding-top: 14px;
+  }
+  .records li + li { margin-top: 0; }
+  .records li:nth-child(3) { grid-column: 2; }
+  .contact {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 24px;
+    margin-top: 14px;
+    padding-top: 14px;
+  }
+  .contact li + li { margin-top: 0; }
+
+  .bio { margin-top: 30px; }
+  .sec { margin-top: 44px; }
+  .sec > h2 { font-size: 1.375rem; margin-bottom: 14px; }
+  section[id], .entry { scroll-margin-top: 12px; }
+  .plate { padding: 8px; }
+  .news li { grid-template-columns: 70px 1fr; gap: 12px; }
+  .foot { padding: 0 18px; }
+  .edit-banner { padding: 8px 18px; }
+}
+@media (max-width: 480px) {
+  .foot .sep { display: none; }
+  .foot .nw { display: block; }
+}
+@media (max-width: 374px) {
+  /* too narrow for the timeline beside the photo: the records go beside it, the timeline below */
+  .side { grid-template-columns: 100px minmax(0, 1fr); column-gap: 14px; }
+  .flip-hint { width: 100px; }
+  .records { grid-column: 2; grid-row: 1; align-self: center; display: block; margin-top: 0; padding-top: 0; border-top: 0; }
+  .records li:nth-child(3) { grid-column: auto; }
+  .records li + li { margin-top: 8px; }
+  .timeline { grid-column: 1 / -1; grid-row: 2; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--rule); }
+  .contact { grid-row: 3; }
+}
+
+@media (max-width: 359px) {
+  .nav { gap: 12px; }               /* leaves room for a fifth link (Misc) at 320px */
+  .nav a { font-size: .875rem; }
+  .name { font-size: 2rem; }
+}
+
+/* Print and Save as PDF: dark ink on white in either theme, the real photo only */
+@media print {
+  :root, :root:not([data-theme="light"]), :root[data-theme="dark"] {
+    --bg: #fff; --text: #111; --text-2: #333; --muted: #555; --gold: #8c6f3a;
+    --link-line: #8c6f3a; --callout-bg: #fff; --rule: #ccc; --plate-line: #ccc;
+    --photo-line: rgb(0 0 0 / .14); color-scheme: light;
+  }
+  .topbar, .theme-toggle, .flip-hint, .skip-link, .edit-banner { display: none !important; }
+  .side { position: static !important; }
+  .flip-in { transform: none !important; transition: none !important; }
+  .face.back { display: none !important; }
+  .plate { filter: none !important; }
+  .fig, .news li, .pub-title, .entry h3, .entry-head, .records li { break-inside: avoid; }
+  .sec > h2, .pub-title, .authors, .entry-head, .entry h3, .meta { break-after: avoid; }
+}
