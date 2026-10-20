@@ -67,7 +67,7 @@
         "@id": "https://shenqi-zhou.github.io/#website"
       },
       "dateCreated": "2026-10-18",
-      "dateModified": "2026-10-18",
+      "dateModified": "2026-10-20",
       "mainEntity": {
         "@id": "https://shenqi-zhou.github.io/#person"
       }
@@ -123,6 +123,35 @@
       "alternateName": "NUS",
       "url": "https://nus.edu.sg/",
       "sameAs": "https://en.wikipedia.org/wiki/National_University_of_Singapore"
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "@id": "https://arxiv.org/abs/2610.25069",
+      "name": "Auto-MD-bench: Evaluating Autoresearch Agents for Real-World Medical Tasks",
+      "url": "https://arxiv.org/abs/2610.25069",
+      "sameAs": "https://doi.org/10.48550/arXiv.2610.25069",
+      "datePublished": "2026-10-18",
+      "author": [
+        {
+          "@id": "https://shenqi-zhou.github.io/#person"
+        },
+        {
+          "@type": "Person",
+          "name": "Qiran Zou"
+        },
+        {
+          "@type": "Person",
+          "name": "Wenhao Zhao"
+        },
+        {
+          "@type": "Person",
+          "name": "Zhenyu Liao"
+        },
+        {
+          "@type": "Person",
+          "name": "Dianbo Liu"
+        }
+      ]
     }
   ]
 }
@@ -168,7 +197,7 @@
       <li><span class="yr">2023</span> <span class="ev">Started B.Eng., ZJU</span></li>
       <li><span class="yr">2025</span> <span class="ev">Prof.&nbsp;Nai&nbsp;Ding, ZJU</span></li>
       <li><span class="yr">2026</span> <span class="ev">Prof.&nbsp;Dianbo&nbsp;Liu, NUS</span></li>
-      <li><span class="yr">2026</span> <span class="ev">Paper under review</span></li>
+      <li><span class="yr">2026</span> <span class="ev">Paper on arXiv</span></li>
     </ol>
 
     <ul class="records" role="list" aria-label="Grades and scholarships">
@@ -192,7 +221,7 @@
     <section class="sec" id="news">
       <h2>News</h2>
       <ul class="news" role="list">
-        <li><time datetime="2026-10">Oct 2026</time><span>Submitted our <a class="nw" href="#paper">Auto-MD-bench</a> paper.</span></li>
+        <li><time datetime="2026-10">Oct 2026</time><span>Our <a class="nw" href="https://arxiv.org/abs/2610.25069">Auto-MD-bench</a> paper is on&nbsp;arXiv.</span></li>
         <li><time datetime="2026-05">May 2026</time><span>Started a research internship with Prof.&nbsp;Dianbo&nbsp;Liu at&nbsp;NUS.</span></li>
       </ul>
     </section>
@@ -200,9 +229,10 @@
     <section class="sec" id="paper">
       <h2>Manuscript</h2>
       <article class="pub">
-        <h3 class="pub-title"><span class="nw">Auto-MD-bench:</span> Evaluating Autoresearch Agents for Real-World Medical&nbsp;Tasks</h3>
+        <h3 class="pub-title"><a href="https://arxiv.org/abs/2610.25069"><span class="nw">Auto-MD-bench:</span> Evaluating Autoresearch Agents for Real-World Medical&nbsp;Tasks</a></h3>
         <p class="authors"><strong>Shenqi&nbsp;Zhou</strong>*, Qiran&nbsp;Zou*, Wenhao&nbsp;Zhao, Zhenyu&nbsp;Liao, Dianbo&nbsp;Liu</p>
-        <p class="status"><em>Under review.</em> *Equal contribution.</p>
+        <p class="status"><em>arXiv preprint, 2026. Under review.</em> *Equal contribution.</p>
+        <p class="pub-links"><a href="https://arxiv.org/abs/2610.25069">arXiv</a><span class="sep" aria-hidden="true"> · </span><a href="https://arxiv.org/pdf/2610.25069">PDF</a><span class="sep" aria-hidden="true"> · </span><a href="https://github.com/Edwin0080/Auto-MD-bench">Code</a><span class="sep" aria-hidden="true"> · </span><a href="https://huggingface.co/datasets/Edwin0080/Auto-MD-bench">Data</a></p>
         <p class="text">We find that models built by AI agents can reach competitive primary scores while giving risk estimates that are less well calibrated than those of simple baseline models, so a single score is not enough to judge them for medical&nbsp;use.</p>
         <figure class="fig">
           <a class="plate" href="images/automdbench_fig1.png"><img src="images/automdbench_fig1_1280.png" width="1280" height="625" loading="lazy" alt="Overview of Auto-MD-bench: medical tasks given to autoresearch agents, whose models are evaluated on primary task performance, risk calibration and external validation, with an analysis of agent behavior"></a>
