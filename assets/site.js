@@ -2,38 +2,30 @@
   var root = document.documentElement;
   root.classList.add('js');      /* set here, not inline, so a failed load leaves the no-JS layout */
 
-  /* Draft view: ?edit (or #edit) shows the hidden "todo" items */
-  if (/[?&]edit\b/.test(location.search) || location.hash === '#edit') {
-    root.classList.add('show-todo');
-    document.querySelectorAll('.todo[hidden], .edit-banner[hidden]').forEach(function (el) { el.hidden = false; });
-  }
-
-  /* Theme toggle: follows the system until the visitor picks one */
-  var toggle = document.querySelector('.theme-toggle');
-  if (toggle) {
-    var dark = window.matchMedia('(prefers-color-scheme: dark)');
-    var isDark = function () {
-      var t = root.getAttribute('data-theme');
-      return t ? t === 'dark' : dark.matches;
-    };
-    var metas = [].slice.call(document.querySelectorAll('meta[name="theme-color"]'));
-    var sync = function () {
-      toggle.setAttribute('aria-pressed', String(isDark()));
-      /* the browser bar follows a theme picked by hand, not only the system one */
-      if (root.getAttribute('data-theme')) {
-        var c = isDark() ? '#1c1a17' : '#f0ede6';
-        metas.forEach(function (m) { m.setAttribute('content', c); });
+  /* Light/dark button: the page follows the system until the visitor chooses */
+  var modeBtn = document.querySelector('.mode-btn');
+  if (modeBtn) {
+    var BAR_COLOUR = { light: '#f5f7f7', dark: '#111a1b' };   /* keep in step with --bg */
+    var sysDark = window.matchMedia('(prefers-color-scheme: dark)');
+    var barMetas = document.querySelectorAll('meta[name="theme-color"]');
+    var currentMode = function () { return root.dataset.theme || (sysDark.matches ? 'dark' : 'light'); };
+    var showMode = function () {
+      var mode = currentMode();
+      modeBtn.setAttribute('aria-pressed', mode === 'dark' ? 'true' : 'false');
+      /* a mode chosen by hand also recolours the browser bar */
+      if (root.dataset.theme) {
+        for (var i = 0; i < barMetas.length; i++) barMetas[i].content = BAR_COLOUR[mode];
       }
     };
-    toggle.hidden = false;
-    sync();
-    toggle.addEventListener('click', function () {
-      var next = isDark() ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem('theme', next); } catch (e) {}
-      sync();
+    modeBtn.hidden = false;
+    showMode();
+    modeBtn.addEventListener('click', function () {
+      var chosen = currentMode() === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = chosen;
+      try { localStorage.setItem('sz-mode', chosen); } catch (e) {}
+      showMode();
     });
-    if (dark.addEventListener) dark.addEventListener('change', sync);
+    if (sysDark.addEventListener) sysDark.addEventListener('change', showMode);
   }
 
   /* Photo card: click (or Enter / Space) flips between the photo and the avatar */
