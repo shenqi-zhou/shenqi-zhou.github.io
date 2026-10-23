@@ -525,7 +525,7 @@ section[id], .entry { scroll-margin-top: 96px; }
     padding-top: 14px;
   }
   .records li + li { margin-top: 0; }
-  .records li:nth-child(3) { grid-column: 2; }
+  .records li:nth-child(n+3) { grid-column: 2; }   /* every scholarship stays in the right column */
   .contact {
     grid-column: 1 / -1;
     grid-row: 3;
@@ -555,7 +555,7 @@ section[id], .entry { scroll-margin-top: 96px; }
   .side { grid-template-columns: 100px minmax(0, 1fr); column-gap: 14px; }
   .turn-cue { width: 100px; }
   .records { grid-column: 2; grid-row: 1; align-self: center; display: block; margin-top: 0; padding-top: 0; border-top: 0; }
-  .records li:nth-child(3) { grid-column: auto; }
+  .records li:nth-child(n+3) { grid-column: auto; }
   .records li + li { margin-top: 8px; }
   .timeline { grid-column: 1 / -1; grid-row: 2; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--rule); }
   .contact { grid-row: 3; }
